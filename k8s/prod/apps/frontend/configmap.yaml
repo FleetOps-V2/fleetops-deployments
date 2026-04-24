@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleetops-frontend-config
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-frontend
+    app.kubernetes.io/environment: prod
+    app.kubernetes.io/component: frontend
+data:
+  NGINX_PORT: "80"

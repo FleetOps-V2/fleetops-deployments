@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleetops-vehicle-service-config
+  namespace: fleetops-dev
+  labels:
+    app.kubernetes.io/name: fleetops-vehicle-service
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/component: backend
+data:
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://fleetops-postgres:5432/vehicle_db"
+  REDIS_HOST: "fleetops-redis"
+  REDIS_PORT: "6379"
+  CORS_ALLOWED_ORIGINS: "*"
