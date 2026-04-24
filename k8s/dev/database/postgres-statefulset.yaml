@@ -55,17 +55,17 @@ spec:
           configMap:
             name: fleetops-postgres-init-scripts
             defaultMode: 0755
-      volumeClaimTemplates:
-        - metadata:
-            name: postgres-data
-            labels:
-              app.kubernetes.io/name: fleetops-postgres
-              app.kubernetes.io/environment: dev
-              app.kubernetes.io/component: storage
-          spec:
-            accessModes:
-              - ReadWriteOnce
-            storageClassName: fleetops-nfs
-            resources:
-              requests:
-                storage: 5Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+        labels:
+          app.kubernetes.io/name: fleetops-postgres
+          app.kubernetes.io/environment: dev
+          app.kubernetes.io/component: storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: fleetops-nfs
+        resources:
+          requests:
+            storage: 5Gi
