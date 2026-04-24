@@ -1,0 +1,24 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: kgateway
+spec:
+  controllerName: gateway.solo.io/gatewaycontroller
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: fleetops-gateway
+  namespace: fleetops-platform
+  labels:
+    app.kubernetes.io/name: fleetops-gateway
+    app.kubernetes.io/environment: platform
+spec:
+  gatewayClassName: kgateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
