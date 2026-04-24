@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleetops-frontend-nginx-config
+  namespace: fleetops-dev
+  labels:
+    app.kubernetes.io/name: fleetops-frontend
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/component: frontend
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # AUTH
+        location /auth/ {
+            proxy_pass http://fleetops-auth-service:8080/auth/;
+        }
+
+        location = /auth {
+            proxy_pass http://fleetops-auth-service:8080/auth;
+        }
+
+        # VEHICLES (FleetOps)
+        location /api/vehicles/ {
+            proxy_pass http://fleetops-vehicle-service:8080/api/vehicles/;
+        }
+
+        location = /api/vehicles {
+            proxy_pass http://fleetops-vehicle-service:8080/api/vehicles;
+        }
+
+        # TASKS (FleetOps maintenance queue)
+        location /api/tasks/ {
+            proxy_pass http://fleetops-maintenance-service:8080/api/tasks/;
+        }
+
+        location = /api/tasks {
+            proxy_pass http://fleetops-maintenance-service:8080/api/tasks;
+        }
+
+        # REQUESTS (FleetOps)
+        location /api/requests/ {
+            proxy_pass http://fleetops-request-service:8080/api/requests/;
+        }
+
+        location = /api/requests {
+            proxy_pass http://fleetops-request-service:8080/api/requests;
+        }
+
+        # React SPA - serve index.html for all other routes
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
