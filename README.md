@@ -48,6 +48,7 @@ fleetops-deployments/
     platform/
       namespace.yaml
       gateway.yaml
+      gateway-proxy.yaml
     dev/
       namespace.yaml
       database/
@@ -93,7 +94,7 @@ fleetops-deployments/
 ## Folder Purpose
 
 - `k8s/base/storage`: shared storage primitives (StorageClass, PV/PVC patterns)
-- `k8s/platform`: platform namespace-level resources
+- `k8s/platform`: platform namespace-level resources (gateway, proxy)
 - `k8s/dev/database`: development database stack and configuration
 - `k8s/prod/database`: production database stack and configuration
 - `k8s/*/apps`: reserved for app workloads in next phase
@@ -174,6 +175,7 @@ kubectl apply -f k8s/prod/apps/
 
 5. **Platform Gateway**
    - `k8s/platform/gateway.yaml`
+   - `k8s/platform/gateway-proxy.yaml`
 
 6. **Application Deployments**
    - `k8s/dev/apps/` (all services and routes)
@@ -199,7 +201,7 @@ kubectl apply -f k8s/prod/apps/
 
 ### Storage
 - **Dev PostgreSQL**: 5Gi (dynamic provisioning)
-- **Prod PostgreSQL**: 10Gi (dynamic provisioning)
+- **Prod PostgreSQL**: 5Gi (dynamic provisioning)
 - StorageClass: `fleetops-nfs` (already configured)
 
 ## Roadmap
@@ -217,19 +219,21 @@ To deploy the gateway and routing configuration:
 Install the standard Gateway API CRDs and kgateway:
 
 ```bash
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
 
-helm repo add kgateway https://kgateway.dev/charts
+helm repo add kgateway oci://cr.kgateway.dev/kgateway-dev/charts
 helm repo update
-helm install kgateway kgateway/kgateway \
-  --namespace kgateway-system \
-  --create-namespace
+helm install kgateway-crds oci://cr.kgateway.dev/kgateway-dev/charts/kgateway-crds \
+  --namespace kgateway-system --create-namespace --version v2.2.1
+helm install kgateway oci://cr.kgateway.dev/kgateway-dev/charts/kgateway \
+  --namespace kgateway-system --version v2.2.1
 ```
 
 ### 2. Apply Platform Resources
 ```bash
 kubectl apply -f k8s/platform/namespace.yaml
 kubectl apply -f k8s/platform/gateway.yaml
+kubectl apply -f k8s/platform/gateway-proxy.yaml
 ```
 
 ### 3. Deploy Environments (Example: Dev)
@@ -239,4 +243,33 @@ kubectl apply -f k8s/dev/database/
 kubectl apply -f k8s/dev/apps/
 ```
 
+### 4. Configure HAProxy
+Update external HAProxy configuration to use HTTP mode:
+
+```haproxy
+frontend fleetops_http
+    bind *:80
+    mode http
+    default_backend fleetops_gateway
+
+backend fleetops_gateway
+    mode http
+    balance roundrobin
+    option httpchk GET /
+    http-check expect status 200
+    
+    server worker1 172.31.43.240:30082 check
+    server worker2 172.31.42.43:30082 check
+```
+
+### Architecture Flow
+```
+HAProxy (HTTP mode) → Nginx Proxy (NodePort 30082) → kgateway Envoy (NodePort 32708) → Services
+```
+
 Access via: `http://dev.98.86.98.79.nip.io`
+
+### Default Credentials
+- **admin1 / Admin@123** (ADMIN)
+- **manager1 / Manager@123** (MANAGER)  
+- **driver1 / Driver@123** (DRIVER)

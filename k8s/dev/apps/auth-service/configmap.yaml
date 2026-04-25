@@ -11,3 +11,4 @@ data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://fleetops-postgres:5432/auth_db"
   JWT_EXPIRATION: "86400000"
   CORS_ALLOWED_ORIGINS: "*"
+  SPRING_PROFILES_ACTIVE: "dev"

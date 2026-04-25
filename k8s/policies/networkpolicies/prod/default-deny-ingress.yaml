@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-prod
+    app.kubernetes.io/environment: prod
+    app.kubernetes.io/component: networkpolicy
+spec:
+  podSelector: {}  # Select all pods in namespace
+  policyTypes:
+  - Ingress
+  ingress: []  # Deny all ingress by default
