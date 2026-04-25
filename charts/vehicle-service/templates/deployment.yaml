@@ -18,6 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: fleetops-vehicle-service
+        app.kubernetes.io/environment: {{ .Values.namespace.name }}
     spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}

@@ -2,7 +2,7 @@
 # Uses Semantic Versioning tags for controlled releases
 
 image:
-  registry: ""
+  registry: "docker.io"
   repository: johann2003/fleetops-auth-service
   tag: latest  # CI will update this with SemVer when releases are created
   pullPolicy: IfNotPresent

@@ -2,7 +2,7 @@
 # Uses commit SHA tags for rapid iteration and exact traceability
 
 image:
-  registry: ""
+  registry: "docker.io"
   repository: johann2003/fleetops-request-service
   tag: latest  # CI will update this with commit SHA when dev branch is used
   pullPolicy: Always
@@ -60,6 +60,9 @@ autoscaling:
 config:
   springProfilesActive: "dev"
   datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/request_db"
+  vehicleServiceUrl: "http://fleetops-vehicle-service:8080"
+  maintenanceServiceUrl: "http://fleetops-maintenance-service:8080"
+  corsAllowedOrigins: "*"
 
 secrets:
   postgres:

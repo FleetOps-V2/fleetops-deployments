@@ -10,3 +10,4 @@ metadata:
 data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://fleetops-postgres:5432/maintenance_db"
   CORS_ALLOWED_ORIGINS: "*"
+  SPRING_PROFILES_ACTIVE: "dev"

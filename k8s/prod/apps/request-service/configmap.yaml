@@ -11,4 +11,5 @@ data:
   SPRING_DATASOURCE_URL: "jdbc:postgresql://fleetops-postgres:5432/request_db"
   VEHICLE_SERVICE_URL: "http://fleetops-vehicle-service:8080"
   MAINTENANCE_SERVICE_URL: "http://fleetops-maintenance-service:8080"
-  CORS_ALLOWED_ORIGINS: "*"
+  CORS_ALLOWED_ORIGINS: "https://prod.98.86.98.79.nip.io"
+  SPRING_PROFILES_ACTIVE: "prod"

@@ -8,4 +8,7 @@ metadata:
     app.kubernetes.io/component: backend
 data:
   SPRING_DATASOURCE_URL: "{{ .Values.config.datasourceUrl }}"
+  VEHICLE_SERVICE_URL: "{{ .Values.config.vehicleServiceUrl }}"
+  MAINTENANCE_SERVICE_URL: "{{ .Values.config.maintenanceServiceUrl }}"
+  CORS_ALLOWED_ORIGINS: "{{ .Values.config.corsAllowedOrigins }}"
   SPRING_PROFILES_ACTIVE: "{{ .Values.config.springProfilesActive }}"

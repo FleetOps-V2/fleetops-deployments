@@ -1,7 +1,7 @@
 # FleetOps Vehicle Service - Default Values
 
 image:
-  registry: ""
+  registry: "docker.io"
   repository: johann2003/fleetops-vehicle-service
   tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
   pullPolicy: IfNotPresent

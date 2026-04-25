@@ -1,5 +1,5 @@
 image:
-  registry: ""
+  registry: "docker.io"
   repository: johann2003/fleetops-frontend
   tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
   pullPolicy: IfNotPresent

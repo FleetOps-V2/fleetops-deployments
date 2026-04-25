@@ -1,7 +1,7 @@
 # FleetOps Auth Service - Default Values
 
 image:
-  registry: ""
+  registry: "docker.io"
   repository: johann2003/fleetops-auth-service
   tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
   pullPolicy: IfNotPresent

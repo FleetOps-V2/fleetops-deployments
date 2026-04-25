@@ -11,6 +11,7 @@ spec:
   type: {{ .Values.service.type }}
   selector:
     app.kubernetes.io/name: fleetops-frontend
+    app.kubernetes.io/environment: {{ .Values.namespace.name }}
   ports:
     - name: http
       port: {{ .Values.service.port }}

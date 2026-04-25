@@ -61,6 +61,17 @@ spec:
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
+            {{- if .Values.seeding.enabled }}
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+            {{- end }}
+      volumes:
+        {{- if .Values.seeding.enabled }}
+        - name: init-scripts
+          configMap:
+            name: fleetops-postgres-init-scripts
+            defaultMode: 0755
+        {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: postgres-data
