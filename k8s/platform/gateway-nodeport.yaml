@@ -6,9 +6,9 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app.kubernetes.io/instance=kgateway
-    app.kubernetes.io/name=kgateway
-    kgateway=kgateway
+    app.kubernetes.io/instance: kgateway
+    app.kubernetes.io/name: kgateway
+    kgateway: kgateway
   ports:
     - name: http
       port: 80
