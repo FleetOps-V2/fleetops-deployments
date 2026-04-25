@@ -4,19 +4,15 @@
 image:
   registry: "docker.io"
   repository: johann2003/fleetops-frontend
-  tag: latest  # CI will update this with SemVer when releases are created
+  tag: v1.1.0 # CI will update this with SemVer when releases are created
   pullPolicy: IfNotPresent
-
 replicas: 2
-
 service:
   port: 80
   type: ClusterIP
-
 namespace:
   name: fleetops-prod
   create: false
-
 probes:
   readiness:
     enabled: true
@@ -34,7 +30,6 @@ probes:
     periodSeconds: 20
     failureThreshold: 3
     timeoutSeconds: 5
-
 resources:
   requests:
     cpu: 50m
@@ -42,23 +37,19 @@ resources:
   limits:
     cpu: 250m
     memory: 256Mi
-
 autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-
 nginxConfig:
   enabled: true
-
 argocd:
   enabled: true
   syncWave: "5"
   annotations:
     SyncOptions: "Prune=true"
-
 securityContext:
   runAsNonRoot: true
   runAsUser: 101
