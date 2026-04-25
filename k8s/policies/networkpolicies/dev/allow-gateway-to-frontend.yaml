@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-to-frontend
+  namespace: fleetops-dev
+  labels:
+    app.kubernetes.io/name: fleetops-dev
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/component: networkpolicy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: fleetops-frontend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: fleetops-platform
+    - namespaceSelector:
+        matchLabels:
+          name: kgateway-system
+    ports:
+    - protocol: TCP
+      port: 80
