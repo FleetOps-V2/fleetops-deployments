@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-service-discovery
+  namespace: fleetops-dev
+  labels:
+    app.kubernetes.io/name: fleetops-dev
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/component: networkpolicy
+spec:
+  podSelector: {}  # All pods in namespace
+  policyTypes:
+  - Egress
+  egress:
+  # Allow DNS resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow service discovery within same namespace
+  - to: []  # Allow to any pod in same namespace
+    ports:
+    - protocol: TCP
+      port: 8080  # Backend services
+    - protocol: TCP  
+      port: 80    # Frontend
+    - protocol: TCP
+      port: 5432  # PostgreSQL
+    - protocol: TCP
+      port: 6379  # Redis
