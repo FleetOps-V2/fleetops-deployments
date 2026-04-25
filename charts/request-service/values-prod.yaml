@@ -4,7 +4,7 @@
 image:
   registry: "docker.io"
   repository: johann2003/fleetops-request-service
-  tag: v1.2.0 # CI will update this with SemVer when releases are created
+  tag: v1.4.0 # CI will update this with SemVer when releases are created
   pullPolicy: IfNotPresent
 replicas: 2
 service:
