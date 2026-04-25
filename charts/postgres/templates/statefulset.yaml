@@ -38,6 +38,8 @@ spec:
             - configMapRef:
                 name: fleetops-postgres-config
           env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
