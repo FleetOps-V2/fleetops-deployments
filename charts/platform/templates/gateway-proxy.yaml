@@ -1,0 +1,82 @@
+{{- if .Values.gatewayProxy.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fleetops-gateway-proxy
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    app.kubernetes.io/name: fleetops-gateway-proxy
+    app.kubernetes.io/component: gateway
+    {{- include "fleetops-common.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fleetops-common.argocdAnnotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.gatewayProxy.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fleetops-gateway-proxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fleetops-gateway-proxy
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.gatewayProxy.image.registry }}/{{ .Values.gatewayProxy.image.repository }}:{{ .Values.gatewayProxy.image.tag }}
+        imagePullPolicy: {{ .Values.gatewayProxy.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: fleetops-gateway-proxy-config
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleetops-gateway-proxy-config
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    app.kubernetes.io/name: fleetops-gateway-proxy
+    app.kubernetes.io/component: gateway
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        
+        location / {
+            proxy_pass http://{{ .Values.gatewayProxy.config.upstreamGateway }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fleetops-gateway-proxy
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    app.kubernetes.io/name: fleetops-gateway-proxy
+    app.kubernetes.io/component: gateway
+spec:
+  type: {{ .Values.gatewayProxy.service.type }}
+  selector:
+    app.kubernetes.io/name: fleetops-gateway-proxy
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: {{ .Values.gatewayProxy.service.nodePort }}
+    protocol: TCP
+{{- end }}

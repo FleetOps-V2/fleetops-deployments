@@ -1,0 +1,85 @@
+# FleetOps Auth Service - Dev Environment Values
+# Uses commit SHA tags for rapid iteration and exact traceability
+
+image:
+  registry: ""
+  repository: johann2003/fleetops-auth-service
+  tag: latest  # CI will update this with commit SHA when dev branch is used
+  pullPolicy: Always
+
+replicas: 1
+
+service:
+  port: 8080
+  type: ClusterIP
+
+namespace:
+  name: fleetops-dev
+  create: false
+
+probes:
+  startup:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 10
+    timeoutSeconds: 5
+  readiness:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+    timeoutSeconds: 5
+  liveness:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: null
+
+config:
+  jwtExpiration: "86400000"
+  corsAllowedOrigins: "*"
+  springProfilesActive: "dev"
+  datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/auth_db"
+
+secrets:
+  postgres:
+    name: fleetops-postgres-secret
+    userKey: POSTGRES_USER
+    passwordKey: POSTGRES_PASSWORD
+  app:
+    name: fleetops-app-secret
+    jwtSecretKey: JWT_SECRET
+
+argocd:
+  enabled: true
+  syncWave: "3"
+  annotations:
+    SyncOptions: "Prune=true"
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000

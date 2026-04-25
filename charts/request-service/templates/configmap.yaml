@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleetops-request-service-config
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    app.kubernetes.io/name: fleetops-request-service
+    app.kubernetes.io/component: backend
+data:
+  SPRING_DATASOURCE_URL: "{{ .Values.config.datasourceUrl }}"
+  SPRING_PROFILES_ACTIVE: "{{ .Values.config.springProfilesActive }}"

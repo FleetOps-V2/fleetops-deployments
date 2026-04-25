@@ -1,0 +1,37 @@
+namespace:
+  name: fleetops-platform
+  create: false
+
+gateway:
+  enabled: true
+  replicas: 1
+  image:
+    registry: ""
+    repository: johann2003/fleetops-gateway
+    tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+    port: 80
+    nodePort: 32708
+
+gatewayProxy:
+  enabled: true
+  replicas: 2
+  image:
+    registry: ""
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30082
+  config:
+    upstreamGateway: "172.31.43.240:32708"
+
+argocd:
+  enabled: true
+  syncWave: "2"
+  annotations:
+    SyncOptions: "Prune=true"

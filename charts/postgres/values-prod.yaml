@@ -1,0 +1,65 @@
+# FleetOps PostgreSQL - Prod Environment Values
+# Uses stable tags for production
+
+image:
+  registry: ""
+  repository: postgres
+  tag: 16-alpine
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+service:
+  port: 5432
+  type: ClusterIP
+
+namespace:
+  name: fleetops-prod
+  create: false
+
+storage:
+  size: 5Gi
+  storageClass: fleetops-nfs
+
+probes:
+  readiness:
+    enabled: true
+    execCommand:
+      - pg_isready
+      - -U
+      - postgres
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+config:
+  postgresDB: postgres
+  authDB: auth_db
+  vehicleDB: vehicle_db
+  requestDB: request_db
+  maintenanceDB: maintenance_db
+
+secrets:
+  name: fleetops-postgres-secret
+  userKey: POSTGRES_USER
+  passwordKey: POSTGRES_PASSWORD
+
+argocd:
+  enabled: true
+  syncWave: "1"
+  annotations:
+    SyncOptions: "Prune=true"
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  fsGroup: 999

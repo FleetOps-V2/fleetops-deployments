@@ -1,0 +1,65 @@
+# FleetOps Frontend - Prod Environment Values
+# Uses Semantic Versioning tags for controlled releases
+
+image:
+  registry: ""
+  repository: johann2003/fleetops-frontend
+  tag: latest  # CI will update this with SemVer when releases are created
+  pullPolicy: IfNotPresent
+
+replicas: 2
+
+service:
+  port: 80
+  type: ClusterIP
+
+namespace:
+  name: fleetops-prod
+  create: false
+
+probes:
+  readiness:
+    enabled: true
+    path: /
+    port: 80
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  liveness:
+    enabled: true
+    path: /
+    port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 20
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nginxConfig:
+  enabled: true
+
+argocd:
+  enabled: true
+  syncWave: "5"
+  annotations:
+    SyncOptions: "Prune=true"
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  fsGroup: 101

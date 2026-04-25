@@ -1,0 +1,57 @@
+# FleetOps Redis - Prod Environment Values
+# Uses stable tags (Redis doesn't have custom images)
+
+image:
+  registry: ""
+  repository: redis
+  tag: 7-alpine
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+service:
+  port: 6379
+  type: ClusterIP
+
+namespace:
+  name: fleetops-prod
+  create: false
+
+probes:
+  readiness:
+    enabled: true
+    execCommand:
+      - redis-cli
+      - ping
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    failureThreshold: 3
+    timeoutSeconds: 5
+  liveness:
+    enabled: true
+    execCommand:
+      - redis-cli
+      - ping
+    initialDelaySeconds: 10
+    periodSeconds: 15
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+argocd:
+  enabled: true
+  syncWave: "1"
+  annotations:
+    SyncOptions: "Prune=true"
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  fsGroup: 999

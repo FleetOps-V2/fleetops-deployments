@@ -1,0 +1,78 @@
+# FleetOps Vehicle Service - Default Values
+
+image:
+  registry: ""
+  repository: johann2003/fleetops-vehicle-service
+  tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+service:
+  port: 8080
+  type: ClusterIP
+
+namespace:
+  name: fleetops-dev
+  create: false
+
+probes:
+  startup:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 10
+    timeoutSeconds: 5
+  readiness:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    failureThreshold: 5
+    timeoutSeconds: 5
+  liveness:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 60
+    periodSeconds: 15
+    failureThreshold: 3
+    timeoutSeconds: 5
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+
+config:
+  springProfilesActive: "dev"
+  datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/vehicle_db"
+
+secrets:
+  postgres:
+    name: fleetops-postgres-secret
+    userKey: POSTGRES_USER
+    passwordKey: POSTGRES_PASSWORD
+  app:
+    name: fleetops-app-secret
+    jwtSecretKey: JWT_SECRET
+
+argocd:
+  enabled: true
+  syncWave: "4"
+  annotations:
+    SyncOptions: "Prune=true"
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000

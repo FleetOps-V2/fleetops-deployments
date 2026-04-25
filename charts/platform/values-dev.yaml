@@ -1,0 +1,40 @@
+# FleetOps Platform - Dev Environment Values
+# Uses commit SHA tags for rapid iteration and exact traceability
+
+namespace:
+  name: fleetops-platform
+  create: false
+
+gateway:
+  enabled: true
+  replicas: 1
+  image:
+    registry: ""
+    repository: johann2003/fleetops-gateway
+    tag: latest  # CI will update this with commit SHA when dev branch is used
+    pullPolicy: Always
+  service:
+    type: LoadBalancer
+    port: 80
+    nodePort: 32708
+
+gatewayProxy:
+  enabled: true
+  replicas: 2
+  image:
+    registry: ""
+    repository: nginx
+    tag: alpine
+    pullPolicy: IfNotPresent
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30082
+  config:
+    upstreamGateway: "172.31.43.240:32708"
+
+argocd:
+  enabled: true
+  syncWave: "2"
+  annotations:
+    SyncOptions: "Prune=true"

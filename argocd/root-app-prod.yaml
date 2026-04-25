@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fleetops-root-prod
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: fleetops-root-prod
+    app.kubernetes.io/environment: prod
+    app.kubernetes.io/component: root
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/johann2003/fleetops-deployments.git
+    targetRevision: HEAD
+    path: argocd/apps/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

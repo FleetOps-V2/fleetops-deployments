@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fleetops-maintenance-service
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    app.kubernetes.io/name: fleetops-maintenance-service
+    app.kubernetes.io/component: backend
+    {{- include "fleetops-common.labels" . | nindent 4 }}
+  annotations:
+    {{- include "fleetops-common.argocdAnnotations" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: fleetops-maintenance-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: fleetops-maintenance-service
+    spec:
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      containers:
+        - name: maintenance-service
+          image: {{ include "fleetops-common.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: fleetops-maintenance-service-config
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.postgres.name }}
+                  key: {{ .Values.secrets.postgres.userKey }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.postgres.name }}
+                  key: {{ .Values.secrets.postgres.passwordKey }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.app.name }}
+                  key: {{ .Values.secrets.app.jwtSecretKey }}
+          {{- include "fleetops-common.springBootProbes" . | nindent 10 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

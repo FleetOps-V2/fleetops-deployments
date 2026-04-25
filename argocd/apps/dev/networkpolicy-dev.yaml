@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fleetops-networkpolicy-dev
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: fleetops-networkpolicy
+    app.kubernetes.io/environment: dev
+    app.kubernetes.io/component: networkpolicy
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/johann2003/fleetops-deployments.git
+    targetRevision: HEAD
+    path: k8s/policies/networkpolicies/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: fleetops-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
