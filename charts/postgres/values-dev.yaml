@@ -2,7 +2,7 @@
 # Uses commit SHA tags for rapid iteration and exact traceability
 
 image:
-  registry: ""
+  registry: docker.io
   repository: postgres
   tag: 16-alpine
   pullPolicy: IfNotPresent

@@ -1,5 +1,5 @@
 image:
-  registry: ""
+  registry: docker.io
   repository: postgres
   tag: 16-alpine
   pullPolicy: IfNotPresent
