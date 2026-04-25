@@ -573,7 +573,7 @@ charts/
 5. **Gateway API**: kgateway already installed on cluster
 6. **Hostnames**: Using nip.io for dev/prod - should use real DNS in production
 7. **ArgoCD**: Installed in `argocd` namespace with admin access
-8. **Git Repository**: `https://github.com/johann2003/fleetops-deployments.git`
+8. **Git Repository**: `https://github.com/FleetOps-Project-Devops/fleetops-deployments.git`
 9. **Service Discovery**: Using Kubernetes DNS (service.namespace.svc.cluster.local)
 10. **NetworkPolicies**: NetworkPolicies are deployed via ArgoCD from `k8s/policies/networkpolicies/` directory
 11. **Chart Dependencies**: All service charts depend on `fleetops-common` library chart (local file reference)

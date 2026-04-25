@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/johann2003/fleetops-deployments.git
+    repoURL: https://github.com/FleetOps-Project-Devops/fleetops-deployments.git
     targetRevision: HEAD
     path: charts/maintenance-service
     helm:
