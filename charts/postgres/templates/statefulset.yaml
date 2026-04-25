@@ -24,7 +24,11 @@ spec:
         {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
         - name: postgres
+          {{- if .Values.image.registry }}
           image: {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          {{- else }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: postgres
