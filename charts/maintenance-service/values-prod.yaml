@@ -4,19 +4,15 @@
 image:
   registry: "docker.io"
   repository: johann2003/fleetops-maintenance-service
-  tag: latest  # CI will update this with SemVer when releases are created
+  tag: v1.1.0 # CI will update this with SemVer when releases are created
   pullPolicy: IfNotPresent
-
 replicas: 2
-
 service:
   port: 8080
   type: ClusterIP
-
 namespace:
   name: fleetops-prod
   create: false
-
 probes:
   startup:
     enabled: true
@@ -42,7 +38,6 @@ probes:
     periodSeconds: 15
     failureThreshold: 3
     timeoutSeconds: 5
-
 resources:
   requests:
     cpu: 200m
@@ -50,15 +45,12 @@ resources:
   limits:
     cpu: 1000m
     memory: 1Gi
-
 autoscaling:
   enabled: false
-
 config:
   springProfilesActive: "prod"
   datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/maintenance_db"
   corsAllowedOrigins: "https://prod.98.86.98.79.nip.io"
-
 secrets:
   postgres:
     name: fleetops-postgres-secret
@@ -67,13 +59,11 @@ secrets:
   app:
     name: fleetops-app-secret
     jwtSecretKey: JWT_SECRET
-
 argocd:
   enabled: true
   syncWave: "4"
   annotations:
     SyncOptions: "Prune=true"
-
 securityContext:
   runAsNonRoot: true
   runAsUser: 1000
