@@ -10,8 +10,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app.kubernetes.io/name: fleetops-vehicle-service
-    app.kubernetes.io/environment: {{ .Values.namespace.name }}
+    {{- include "fleetops-common.selectorLabels" . | nindent 4 }}
   ports:
     - name: http
       port: {{ .Values.service.port }}
