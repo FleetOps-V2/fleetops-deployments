@@ -14,14 +14,11 @@ spec:
   policyTypes:
     - Egress
   egress:
-    # Allow gateway-proxy to reach Grafana in monitoring namespace
+    # Allow gateway-proxy to reach all services in monitoring namespace
     - to:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: monitoring
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: grafana
       ports:
         - protocol: TCP
           port: 80
