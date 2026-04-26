@@ -33,3 +33,13 @@ spec:
       port: 5432  # PostgreSQL
     - protocol: TCP
       port: 6379  # Redis
+  # Allow gateway from fleetops-platform namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: fleetops-platform
+    ports:
+    - protocol: TCP
+      port: 8080  # Backend services
+    - protocol: TCP
+      port: 80    # Frontend
