@@ -23,6 +23,14 @@ spec:
       port: 8080  # Backend services
     - protocol: TCP
       port: 80    # Frontend
+  # Allow Prometheus to scrape metrics
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8080  # Actuator metrics port
   egress:
   # Allow DNS resolution
   - to:
