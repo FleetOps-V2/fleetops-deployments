@@ -13,6 +13,7 @@ spec:
       app.kubernetes.io/name: fleetops-gateway
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
     - podSelector:
@@ -28,3 +29,34 @@ spec:
     ports:
     - protocol: TCP
       port: 80
+  egress:
+  # Allow DNS resolution
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow gateway to reach fleetops-dev services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: fleetops-dev
+    ports:
+    - protocol: TCP
+      port: 8080  # Backend services
+    - protocol: TCP
+      port: 80    # Frontend
+  # Allow gateway to reach fleetops-prod services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: fleetops-prod
+    ports:
+    - protocol: TCP
+      port: 8080  # Backend services
+    - protocol: TCP
+      port: 80    # Frontend
