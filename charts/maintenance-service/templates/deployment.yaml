@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: fleetops-maintenance-service
+        {{- include "fleetops-common.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/environment: {{ .Values.namespace.name }}
     spec:
       securityContext:
