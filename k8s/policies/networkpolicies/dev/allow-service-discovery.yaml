@@ -34,7 +34,7 @@ spec:
     - protocol: TCP
       port: 6379  # Redis
   # Allow gateway from fleetops-platform namespace
-  - from:
+  - to:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: fleetops-platform
