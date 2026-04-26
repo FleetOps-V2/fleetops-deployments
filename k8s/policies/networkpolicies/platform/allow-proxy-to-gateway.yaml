@@ -60,6 +60,14 @@ spec:
       port: 8080  # Backend services
     - protocol: TCP
       port: 80    # Frontend
+  # Allow gateway to reach monitoring services
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: monitoring
+    ports:
+    - protocol: TCP
+      port: 80    # Grafana
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
