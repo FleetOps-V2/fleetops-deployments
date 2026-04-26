@@ -56,3 +56,13 @@ spec:
       backendRefs:
         - name: {{ .Values.routes.frontend.serviceName }}
           port: {{ .Values.routes.frontend.servicePort }}
+    {{- if .Values.routes.grafana }}
+    - matches:
+        - path:
+            type: PathPrefix
+            value: {{ .Values.routes.grafana.path }}
+      backendRefs:
+        - name: {{ .Values.routes.grafana.serviceName }}
+          namespace: {{ .Values.routes.grafana.namespace }}
+          port: {{ .Values.routes.grafana.servicePort }}
+    {{- end }}

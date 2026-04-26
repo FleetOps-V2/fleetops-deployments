@@ -36,3 +36,8 @@ routes:
     pathType: Exact
     serviceName: fleetops-frontend
     servicePort: 80
+  grafana:
+    path: /grafana
+    serviceName: monitoring-grafana
+    servicePort: 80
+    namespace: monitoring
