@@ -56,13 +56,28 @@ spec:
       backendRefs:
         - name: {{ .Values.routes.frontend.serviceName }}
           port: {{ .Values.routes.frontend.servicePort }}
-    {{- if .Values.routes.grafana }}
+---
+{{- if .Values.routes.grafana }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: fleetops-{{ .Values.namespace.name }}-grafana
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app.kubernetes.io/name: fleetops-grafana-route
+spec:
+  parentRefs:
+    - name: {{ .Values.gateway.name }}
+      namespace: {{ .Values.gateway.namespace }}
+  hostnames:
+    - "{{ .Values.routes.grafana.hostname }}"
+  rules:
     - matches:
         - path:
             type: PathPrefix
-            value: {{ .Values.routes.grafana.path }}
+            value: "/"
       backendRefs:
         - name: {{ .Values.routes.grafana.serviceName }}
           namespace: {{ .Values.routes.grafana.namespace }}
           port: {{ .Values.routes.grafana.servicePort }}
-    {{- end }}
+{{- end }}

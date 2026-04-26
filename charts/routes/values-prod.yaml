@@ -37,7 +37,7 @@ routes:
     serviceName: fleetops-frontend
     servicePort: 80
   grafana:
-    path: /grafana
+    hostname: grafana.prod.98.86.98.79.nip.io
     serviceName: monitoring-grafana
     servicePort: 80
     namespace: monitoring
