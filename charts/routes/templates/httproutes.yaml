@@ -80,5 +80,5 @@ spec:
         - name: {{ .Values.routes.grafana.serviceName }}
           namespace: {{ .Values.routes.grafana.namespace }}
           port: {{ .Values.routes.grafana.servicePort }}
-          appProtocol: ws
+          appProtocol: kubernetes.io/ws
 {{- end }}
