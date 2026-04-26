@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fleetops-maintenance-service
+  name: {{ include "fleetops-common.name" . }}
   namespace: {{ include "fleetops-common.namespace" . }}
   labels:
-    app.kubernetes.io/name: fleetops-maintenance-service
+    app.kubernetes.io/name: {{ include "fleetops-common.name" . }}
     app.kubernetes.io/component: backend
     {{- include "fleetops-common.labels" . | nindent 4 }}
   annotations:
