@@ -9,7 +9,7 @@ gateway:
   enabled: true
   replicas: 1
   image:
-    registry: ""
+    registry: docker.io
     repository: johann2003/fleetops-gateway
     tag: latest  # CI will update this with commit SHA when dev branch is used
     pullPolicy: Always
@@ -22,7 +22,7 @@ gatewayProxy:
   enabled: true
   replicas: 2
   image:
-    registry: ""
+    registry: docker.io
     repository: nginx
     tag: alpine
     pullPolicy: IfNotPresent
@@ -31,7 +31,7 @@ gatewayProxy:
     port: 80
     nodePort: 30082
   config:
-    upstreamGateway: "172.31.43.240:32708"
+    upstreamGateway: "fleetops-gateway.fleetops-platform.svc.cluster.local:80"
 
 argocd:
   enabled: true
