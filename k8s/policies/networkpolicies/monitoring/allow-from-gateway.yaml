@@ -20,7 +20,7 @@ spec:
               kubernetes.io/metadata.name: fleetops-platform
           podSelector:
             matchLabels:
-              app.kubernetes.io/name: fleetops-gateway
+              app.kubernetes.io/name: fleetops-gateway-proxy
       ports:
         - protocol: TCP
           port: 80

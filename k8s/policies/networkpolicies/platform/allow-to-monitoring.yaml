@@ -10,11 +10,11 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: fleetops-gateway
+      app.kubernetes.io/name: fleetops-gateway-proxy
   policyTypes:
     - Egress
   egress:
-    # Allow gateway to reach Grafana in monitoring namespace
+    # Allow gateway-proxy to reach Grafana in monitoring namespace
     - to:
         - namespaceSelector:
             matchLabels:
