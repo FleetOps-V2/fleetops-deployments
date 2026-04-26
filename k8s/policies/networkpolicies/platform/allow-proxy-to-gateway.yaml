@@ -70,6 +70,16 @@ spec:
       port: 80    # Grafana Service
     - protocol: TCP
       port: 3000  # Grafana Pod TargetPort
+  # Allow gateway to reach argocd-server
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: argocd
+    ports:
+    - protocol: TCP
+      port: 80    # argocd-server HTTP
+    - protocol: TCP
+      port: 8080  # argocd-server TargetPort
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
