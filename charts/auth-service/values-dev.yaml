@@ -4,7 +4,7 @@
 image:
   registry: "docker.io"
   repository: johann2003/fleetops-auth-service
-  tag: 135ca05 # CI will update this with commit SHA when dev branch is used
+  tag: latest # CI will update this with commit SHA when dev branch is used
   pullPolicy: Always
 replicas: 1
 service:
