@@ -8,7 +8,9 @@ metadata:
     app.kubernetes.io/component: network-policy
     app.kubernetes.io/environment: monitoring
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
   policyTypes:
     - Ingress
     - Egress
@@ -23,4 +25,21 @@ spec:
         - protocol: TCP
           port: 3000
   egress:
-    - {}
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow Grafana to reach Prometheus
+    - to:
+        - podSelector:
+            matchLabels:
+              prometheus: monitoring-kube-prometheus-prometheus
+      ports:
+        - protocol: TCP
+          port: 9090
