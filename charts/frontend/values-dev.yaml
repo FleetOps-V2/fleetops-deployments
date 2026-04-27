@@ -4,19 +4,15 @@
 image:
   registry: "docker.io"
   repository: johann2003/fleetops-frontend
-  tag: latest  # CI will update this with commit SHA when dev branch is used
+  tag: develop-f552aaf # CI will update this with commit SHA when dev branch is used
   pullPolicy: Always
-
 replicas: 1
-
 service:
   port: 80
   type: ClusterIP
-
 namespace:
   name: fleetops-dev
   create: false
-
 probes:
   readiness:
     enabled: true
@@ -34,7 +30,6 @@ probes:
     periodSeconds: 20
     failureThreshold: 3
     timeoutSeconds: 5
-
 resources:
   requests:
     cpu: 50m
@@ -42,23 +37,19 @@ resources:
   limits:
     cpu: 250m
     memory: 256Mi
-
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-
 nginxConfig:
   enabled: true
-
 argocd:
   enabled: true
   syncWave: "5"
   annotations:
     SyncOptions: "Prune=true"
-
 securityContext:
   runAsNonRoot: true
   runAsUser: 101
