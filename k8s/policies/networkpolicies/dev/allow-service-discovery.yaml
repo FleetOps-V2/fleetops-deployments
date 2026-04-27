@@ -43,11 +43,12 @@ spec:
     - protocol: TCP
       port: 53
   # Allow service discovery within same namespace
-  - to: []  # Allow to any pod in same namespace
+  - to:
+      - podSelector: {}  # Allow to any pod in same namespace
     ports:
     - protocol: TCP
       port: 8080  # Backend services
-    - protocol: TCP  
+    - protocol: TCP
       port: 80    # Frontend
     - protocol: TCP
       port: 5432  # PostgreSQL
