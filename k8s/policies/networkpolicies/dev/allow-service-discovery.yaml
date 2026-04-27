@@ -13,6 +13,16 @@ spec:
   - Ingress
   - Egress
   ingress:
+  # Allow same-namespace communication (for DB, Redis, inter-service)
+  - from:
+    - podSelector: {}  # Any pod in same namespace
+    ports:
+    - protocol: TCP
+      port: 8080  # Backend services
+    - protocol: TCP
+      port: 5432  # PostgreSQL
+    - protocol: TCP
+      port: 6379  # Redis
   # Allow gateway from fleetops-platform namespace
   - from:
     - namespaceSelector:
