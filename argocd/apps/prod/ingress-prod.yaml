@@ -1,28 +1,31 @@
+# ArgoCD App — ALB Ingress (deployed after all services are running)
+# sync-wave: "5" — last, after all backends are ready
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fleetops-networkpolicy-platform-prod
+  name: fleetops-ingress-prod
   namespace: argocd
   labels:
-    app.kubernetes.io/name: fleetops-networkpolicy-platform
+    app.kubernetes.io/name: fleetops-ingress
     app.kubernetes.io/environment: prod
-    app.kubernetes.io/component: networkpolicy
+    app.kubernetes.io/component: networking
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   project: default
   source:
     repoURL: https://github.com/FleetOps-Project-Devops/fleetops-deployments.git
     targetRevision: HEAD
-    path: k8s/policies/networkpolicies/platform
+    path: k8s/prod/apps
+    directory:
+      include: "ingress.yaml"
   destination:
     server: https://kubernetes.default.svc
-    namespace: fleetops-platform
+    namespace: fleetops-prod
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
       allowEmpty: false
     syncOptions:
-      - CreateNamespace=true
-      - PrunePropagationPolicy=foreground
+      - CreateNamespace=false

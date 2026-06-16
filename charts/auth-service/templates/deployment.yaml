@@ -18,8 +18,10 @@ spec:
     metadata:
       labels:
         {{- include "fleetops-common.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/environment: {{ .Values.namespace.name }}
+        app.kubernetes.io/component: backend
     spec:
+      # IRSA — grants AWS API access without static credentials
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
@@ -34,6 +36,13 @@ spec:
             - configMapRef:
                 name: fleetops-auth-service-config
           env:
+            # POSTGRES_HOST must be declared FIRST so $(POSTGRES_HOST)
+            # in the ConfigMap datasourceUrl resolves correctly at pod start
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.postgres.name }}
+                  key: {{ .Values.secrets.postgres.hostKey }}
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:

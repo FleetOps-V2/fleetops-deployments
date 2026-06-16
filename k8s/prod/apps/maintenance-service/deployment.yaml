@@ -5,8 +5,8 @@ metadata:
   namespace: fleetops-prod
   labels:
     app.kubernetes.io/name: fleetops-maintenance-service
-    app.kubernetes.io/environment: prod
     app.kubernetes.io/component: backend
+    app.kubernetes.io/environment: prod
 spec:
   replicas: 2
   selector:
@@ -17,16 +17,17 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: fleetops-maintenance-service
-        app.kubernetes.io/environment: prod
         app.kubernetes.io/component: backend
+        app.kubernetes.io/environment: prod
     spec:
+      serviceAccountName: fleetops-app
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
       containers:
         - name: maintenance-service
-          image: johann2003/fleetops-maintenance-service:latest  # Replace with production tag
+          image: ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/fleetops-dev/maintenance-service:latest
           imagePullPolicy: Always
           ports:
             - name: http
@@ -36,6 +37,11 @@ spec:
             - configMapRef:
                 name: fleetops-maintenance-service-config
           env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: fleetops-postgres-secret
+                  key: POSTGRES_HOST
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -51,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: fleetops-app-secret
                   key: JWT_SECRET
+            - name: SPRING_REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: fleetops-redis-secret
+                  key: REDIS_HOST
           readinessProbe:
             httpGet:
               path: /actuator/health

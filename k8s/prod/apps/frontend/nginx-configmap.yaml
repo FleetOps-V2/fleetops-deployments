@@ -5,23 +5,42 @@ metadata:
   namespace: fleetops-prod
   labels:
     app.kubernetes.io/name: fleetops-frontend
-    app.kubernetes.io/environment: prod
     app.kubernetes.io/component: frontend
+    app.kubernetes.io/managed-by: kubectl
 data:
   default.conf: |
     server {
         listen 80;
-        server_name localhost;
+        # ALB handles TLS — Nginx only sees HTTP internally
+        server_name fleetops.website www.fleetops.website;
 
         root /usr/share/nginx/html;
         index index.html;
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+        # Pass real client IP from ALB
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # AUTH
+        # Health check for ALB target group
+        location /healthz {
+            access_log off;
+            return 200 'ok';
+            add_header Content-Type text/plain;
+        }
+
+        # ── API routes — ALB already handles routing at L7 ──────
+        # Nginx here acts as SPA server only.
+        # Backend services are reached directly by the ALB.
+        # These proxy_pass blocks are kept for local development
+        # compatibility (docker-compose still uses Nginx as gateway).
+
         location /auth/ {
             proxy_pass http://fleetops-auth-service:8080/auth/;
         }
@@ -30,7 +49,6 @@ data:
             proxy_pass http://fleetops-auth-service:8080/auth;
         }
 
-        # VEHICLES (FleetOps)
         location /api/vehicles/ {
             proxy_pass http://fleetops-vehicle-service:8080/api/vehicles/;
         }
@@ -39,7 +57,6 @@ data:
             proxy_pass http://fleetops-vehicle-service:8080/api/vehicles;
         }
 
-        # TASKS (FleetOps maintenance queue)
         location /api/tasks/ {
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks/;
         }
@@ -48,7 +65,6 @@ data:
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks;
         }
 
-        # REQUESTS (FleetOps)
         location /api/requests/ {
             proxy_pass http://fleetops-request-service:8080/api/requests/;
         }
@@ -57,7 +73,7 @@ data:
             proxy_pass http://fleetops-request-service:8080/api/requests;
         }
 
-        # React SPA - serve index.html for all other routes
+        # React SPA — serve index.html for all other routes
         location / {
             try_files $uri $uri/ /index.html;
         }

@@ -1,3 +1,9 @@
+# =============================================================
+# Auth Service ConfigMap
+# SPRING_DATASOURCE_URL uses $(POSTGRES_HOST) — Kubernetes
+# resolves this at runtime from the ESO-synced secret.
+# No hardcoded hostnames. No in-cluster Postgres.
+# =============================================================
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,10 +11,15 @@ metadata:
   namespace: fleetops-prod
   labels:
     app.kubernetes.io/name: fleetops-auth-service
-    app.kubernetes.io/environment: prod
     app.kubernetes.io/component: backend
+    app.kubernetes.io/managed-by: kubectl
 data:
-  SPRING_DATASOURCE_URL: "jdbc:postgresql://fleetops-postgres:5432/auth_db"
+  # RDS endpoint injected at runtime via $(POSTGRES_HOST) from ESO secret
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://$(POSTGRES_HOST):5432/auth_db"
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
   JWT_EXPIRATION: "86400000"
-  CORS_ALLOWED_ORIGINS: "https://prod.98.86.98.79.nip.io"
+  CORS_ALLOWED_ORIGINS: "https://fleetops.website"
   SPRING_PROFILES_ACTIVE: "prod"
+  # Flyway — schema managed by migrations, never by Hibernate
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+  SPRING_FLYWAY_ENABLED: "true"

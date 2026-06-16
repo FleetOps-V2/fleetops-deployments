@@ -1,3 +1,11 @@
+# =============================================================
+# Auth Service Deployment — EKS-native
+# Changes from old version:
+#   - serviceAccountName: fleetops-app (IRSA — no static AWS keys)
+#   - image: ECR (not Docker Hub)
+#   - POSTGRES_HOST from ESO-synced secret (not in-cluster postgres)
+#   - JWT_SECRET from ESO-synced secret (not Sealed Secret)
+# =============================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,8 +13,8 @@ metadata:
   namespace: fleetops-prod
   labels:
     app.kubernetes.io/name: fleetops-auth-service
-    app.kubernetes.io/environment: prod
     app.kubernetes.io/component: backend
+    app.kubernetes.io/environment: prod
 spec:
   replicas: 2
   selector:
@@ -17,25 +25,37 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: fleetops-auth-service
-        app.kubernetes.io/environment: prod
         app.kubernetes.io/component: backend
+        app.kubernetes.io/environment: prod
     spec:
+      # IRSA — pod-level AWS credential via projected service account token
+      serviceAccountName: fleetops-app
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
       containers:
         - name: auth-service
-          image: johann2003/fleetops-auth-service:latest  # Replace with production tag
+          # Replace ACCOUNT_ID with: terraform output → pipe to ECR URL
+          image: ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/fleetops-dev/auth-service:latest
           imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
+          # Config (non-sensitive, from ConfigMap)
           envFrom:
             - configMapRef:
                 name: fleetops-auth-service-config
           env:
+            # ── From ESO-synced Secrets Manager secret ─────────
+            # POSTGRES_HOST must be declared BEFORE SPRING_DATASOURCE_URL
+            # so Kubernetes $(VAR) substitution works correctly
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: fleetops-postgres-secret
+                  key: POSTGRES_HOST
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:

@@ -1,76 +1,8 @@
-# FleetOps Request Service - Prod Environment Values
-# Uses Semantic Versioning tags for controlled releases
-
 image:
-  registry: "docker.io"
-  repository: johann2003/fleetops-request-service
-  tag: v1.4.0 # CI will update this with SemVer when releases are created
-  pullPolicy: IfNotPresent
+  tag: "latest"
 replicas: 2
-service:
-  port: 8080
-  type: ClusterIP
-namespace:
-  name: fleetops-prod
-  create: false
-probes:
-  startup:
-    enabled: true
-    path: /actuator/health
-    port: 8080
-    initialDelaySeconds: 45
-    periodSeconds: 10
-    failureThreshold: 15
-    timeoutSeconds: 5
-  readiness:
-    enabled: true
-    path: /actuator/health
-    port: 8080
-    initialDelaySeconds: 45
-    periodSeconds: 10
-    failureThreshold: 5
-    timeoutSeconds: 5
-  liveness:
-    enabled: true
-    path: /actuator/health
-    port: 8080
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    failureThreshold: 3
-    timeoutSeconds: 5
-resources:
-  requests:
-    cpu: 200m
-    memory: 512Mi
-  limits:
-    cpu: 1000m
-    memory: 1Gi
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 4
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 80
-config:
-  springProfilesActive: "prod"
-  datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/request_db"
-  vehicleServiceUrl: "http://fleetops-vehicle-service:8080"
-  maintenanceServiceUrl: "http://fleetops-maintenance-service:8080"
-  corsAllowedOrigins: "https://prod.98.86.98.79.nip.io"
-secrets:
-  postgres:
-    name: fleetops-postgres-secret
-    userKey: POSTGRES_USER
-    passwordKey: POSTGRES_PASSWORD
-  app:
-    name: fleetops-app-secret
-    jwtSecretKey: JWT_SECRET
-argocd:
-  enabled: true
-  syncWave: "4"
-  annotations:
-    SyncOptions: "Prune=true"
-securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000

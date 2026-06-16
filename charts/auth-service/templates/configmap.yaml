@@ -6,8 +6,13 @@ metadata:
   labels:
     app.kubernetes.io/name: fleetops-auth-service
     app.kubernetes.io/component: backend
+    {{- include "fleetops-common.labels" . | nindent 4 }}
 data:
+  # POSTGRES_HOST resolved at runtime from pod env var (injected via secretKeyRef)
   SPRING_DATASOURCE_URL: "{{ .Values.config.datasourceUrl }}"
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
   JWT_EXPIRATION: "{{ .Values.config.jwtExpiration }}"
   CORS_ALLOWED_ORIGINS: "{{ .Values.config.corsAllowedOrigins }}"
   SPRING_PROFILES_ACTIVE: "{{ .Values.config.springProfilesActive }}"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+  SPRING_FLYWAY_ENABLED: "true"

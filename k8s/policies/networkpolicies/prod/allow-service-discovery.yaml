@@ -13,27 +13,26 @@ spec:
   - Ingress
   - Egress
   ingress:
-  # Allow same-namespace communication (for DB, Redis, inter-service)
+  # Allow same-namespace communication (inter-service)
   - from:
     - podSelector: {}  # Any pod in same namespace
     ports:
     - protocol: TCP
       port: 8080  # Backend services
     - protocol: TCP
-      port: 5432  # PostgreSQL
-    - protocol: TCP
-      port: 6379  # Redis
-  # Allow gateway from fleetops-platform namespace
+      port: 80    # Frontend
+
+  # Allow AWS ALB (traffic from VPC CIDR)
   - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: fleetops-platform
+    - ipBlock:
+        cidr: 10.0.0.0/16
     ports:
     - protocol: TCP
       port: 8080  # Backend services
     - protocol: TCP
       port: 80    # Frontend
-  # Allow Prometheus to scrape metrics
+
+  # Allow Prometheus to scrape metrics (if deployed later)
   - from:
     - namespaceSelector:
         matchLabels:
@@ -41,6 +40,7 @@ spec:
     ports:
     - protocol: TCP
       port: 8080  # Actuator metrics port
+
   egress:
   # Allow DNS resolution
   - to:
@@ -52,6 +52,7 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
+
   # Allow service discovery within same namespace
   - to:
       - podSelector: {}  # Allow to any pod in same namespace
@@ -60,7 +61,3 @@ spec:
       port: 8080  # Backend services
     - protocol: TCP
       port: 80    # Frontend
-    - protocol: TCP
-      port: 5432  # PostgreSQL
-    - protocol: TCP
-      port: 6379  # Redis

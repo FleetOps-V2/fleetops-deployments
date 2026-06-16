@@ -1,3 +1,5 @@
+# ArgoCD App — Platform resources (namespaces, IRSA SA, External Secrets)
+# sync-wave: "0" — must run before all application services
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -8,19 +10,16 @@ metadata:
     app.kubernetes.io/environment: prod
     app.kubernetes.io/component: platform
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   project: default
   source:
     repoURL: https://github.com/FleetOps-Project-Devops/fleetops-deployments.git
     targetRevision: HEAD
-    path: charts/platform
-    helm:
-      valueFiles:
-        - values-prod.yaml
+    path: k8s/platform
   destination:
     server: https://kubernetes.default.svc
-    namespace: fleetops-platform
+    namespace: fleetops-prod
   syncPolicy:
     automated:
       prune: true

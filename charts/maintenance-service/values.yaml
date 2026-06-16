@@ -1,18 +1,20 @@
 image:
-  registry: "docker.io"
-  repository: johann2003/fleetops-maintenance-service
-  tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
-  pullPolicy: IfNotPresent
+  registry: "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com"
+  repository: fleetops-dev/maintenance-service
+  tag: "latest"
+  pullPolicy: Always
 
 replicas: 1
+namespace:
+  name: fleetops-prod
+  create: false
 
 service:
   port: 8080
   type: ClusterIP
 
-namespace:
-  name: fleetops-dev
-  create: false
+serviceAccount:
+  name: fleetops-app
 
 probes:
   startup:
@@ -50,27 +52,37 @@ resources:
 
 autoscaling:
   enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
 
 config:
-  springProfilesActive: "dev"
-  datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/maintenance_db"
+  jwtExpiration: "86400000"
+  corsAllowedOrigins: "https://fleetops.website"
+  springProfilesActive: "prod"
+  datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/maintenance_db"
+  awsRegion: "us-east-1"
+  # Bedrock — AI Maintenance Advisor (Phase 7)
+  bedrockModelId: "anthropic.claude-haiku-20240307-v1:0"
 
 secrets:
   postgres:
     name: fleetops-postgres-secret
+    hostKey: POSTGRES_HOST
     userKey: POSTGRES_USER
     passwordKey: POSTGRES_PASSWORD
   app:
     name: fleetops-app-secret
     jwtSecretKey: JWT_SECRET
-
-argocd:
-  enabled: true
-  syncWave: "4"
-  annotations:
-    SyncOptions: "Prune=true"
+  redis:
+    name: fleetops-redis-secret
+    hostKey: REDIS_HOST
 
 securityContext:
   runAsNonRoot: true
   runAsUser: 1000
   fsGroup: 1000
+
+argocd:
+  enabled: true
+  syncWave: "3"

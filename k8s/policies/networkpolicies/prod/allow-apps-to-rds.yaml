@@ -1,0 +1,50 @@
+# =============================================================
+# Network Policy: EKS pod egress to AWS RDS (replaces allow-apps-to-postgres)
+# Pods in fleetops-prod need to reach RDS on port 5432.
+# RDS is outside the cluster — egress goes via the VPC SG, not podSelector.
+# We allow egress to the RDS CIDR block (private subnets).
+# =============================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-rds
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/component: network-policy
+    app.kubernetes.io/environment: prod
+spec:
+  podSelector: {}   # applies to all pods in fleetops-prod
+  policyTypes:
+    - Egress
+  egress:
+    # RDS PostgreSQL — private subnet range (10.0.0.0/16 matches VPC CIDR)
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/16
+      ports:
+        - protocol: TCP
+          port: 5432
+    # ElastiCache Redis
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/16
+      ports:
+        - protocol: TCP
+          port: 6379
+    # HTTPS — Secrets Manager, SSM, ECR, Bedrock (all via VPC endpoints)
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
+    # DNS resolution (kube-dns in kube-system)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

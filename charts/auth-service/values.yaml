@@ -1,20 +1,26 @@
-# FleetOps Auth Service - Default Values
+# FleetOps Auth Service — Default Helm Values
+# Override with values-prod.yaml for AWS deployment
 
 image:
-  registry: "docker.io"
-  repository: johann2003/fleetops-auth-service
-  tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
-  pullPolicy: IfNotPresent
+  # ECR registry — set ACCOUNT_ID in values-prod.yaml
+  registry: "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com"
+  repository: fleetops-dev/auth-service
+  tag: "latest"
+  pullPolicy: Always
 
 replicas: 1
+
+namespace:
+  name: fleetops-prod
+  create: false
 
 service:
   port: 8080
   type: ClusterIP
 
-namespace:
-  name: fleetops-dev
-  create: false
+# IRSA — all pods share the fleetops-app service account
+serviceAccount:
+  name: fleetops-app
 
 # Spring Boot Actuator Probes
 probes:
@@ -56,34 +62,32 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: null
 
-# Environment variables from ConfigMap
+# Config injected via ConfigMap (non-sensitive)
 config:
   jwtExpiration: "86400000"
-  corsAllowedOrigins: "*"
-  springProfilesActive: "dev"
-  datasourceUrl: "jdbc:postgresql://fleetops-postgres:5432/auth_db"
+  corsAllowedOrigins: "https://fleetops.website"
+  springProfilesActive: "prod"
+  # datasourceUrl uses $(POSTGRES_HOST) env var substitution at runtime
+  datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/auth_db"
 
-# Secrets references
+# ESO-synced Kubernetes secret names (secrets are created by ExternalSecret, not Helm)
 secrets:
   postgres:
     name: fleetops-postgres-secret
+    hostKey: POSTGRES_HOST
     userKey: POSTGRES_USER
     passwordKey: POSTGRES_PASSWORD
   app:
     name: fleetops-app-secret
     jwtSecretKey: JWT_SECRET
 
-# ArgoCD specific
-argocd:
-  enabled: true
-  syncWave: "3"
-  annotations:
-    SyncOptions: "Prune=true"
-
-# Security context
 securityContext:
   runAsNonRoot: true
   runAsUser: 1000
   fsGroup: 1000
+
+# ArgoCD
+argocd:
+  enabled: true
+  syncWave: "3"

@@ -1,8 +1,18 @@
+# =============================================================
+# FleetOps EKS Namespace
+# =============================================================
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: fleetops-platform
+  name: fleetops-prod
   labels:
-    app.kubernetes.io/name: fleetops-platform
-    app.kubernetes.io/environment: platform
-    app.kubernetes.io/component: namespace
+    app.kubernetes.io/name: fleetops-prod
+    app.kubernetes.io/managed-by: terraform
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-secrets
+  labels:
+    app.kubernetes.io/name: external-secrets
+    app.kubernetes.io/managed-by: helm

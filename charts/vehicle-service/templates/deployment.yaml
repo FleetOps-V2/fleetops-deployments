@@ -18,8 +18,9 @@ spec:
     metadata:
       labels:
         {{- include "fleetops-common.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/environment: {{ .Values.namespace.name }}
+        app.kubernetes.io/component: backend
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
       containers:
@@ -34,6 +35,11 @@ spec:
             - configMapRef:
                 name: fleetops-vehicle-service-config
           env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.postgres.name }}
+                  key: {{ .Values.secrets.postgres.hostKey }}
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -49,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.app.name }}
                   key: {{ .Values.secrets.app.jwtSecretKey }}
+            - name: SPRING_REDIS_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.redis.name }}
+                  key: {{ .Values.secrets.redis.hostKey }}
           {{- include "fleetops-common.springBootProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

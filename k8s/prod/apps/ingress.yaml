@@ -1,0 +1,88 @@
+# =============================================================
+# AWS ALB Ingress — replaces kgateway + HTTPRoute
+# AWS Load Balancer Controller reads this and provisions an ALB.
+# TLS termination at the ALB using ACM certificate.
+# All traffic internally is HTTP (pods don't need TLS).
+# =============================================================
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fleetops-ingress
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-ingress
+    app.kubernetes.io/component: networking
+    app.kubernetes.io/managed-by: kubectl
+  annotations:
+    # ALB Controller
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+
+    # TLS — ACM certificate for fleetops.website
+    # Replace CERT_ARN with: terraform output kms_secrets_key_arn (or ACM module output)
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID
+
+    # Health check — use Spring Boot actuator
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+    alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: "3"
+
+    # Security Groups — ALB SG from networking module
+    alb.ingress.kubernetes.io/security-groups: sg-REPLACE_WITH_ALB_SG_ID
+
+    # WAF (Phase 6 — uncomment when waf module is applied)
+    # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:...
+
+spec:
+  rules:
+    - host: fleetops.website
+      http:
+        paths:
+          # Auth Service
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-auth-service
+                port:
+                  number: 8080
+
+          # Vehicle Service
+          - path: /api/vehicles
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-vehicle-service
+                port:
+                  number: 8080
+
+          # Maintenance Service
+          - path: /api/tasks
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-maintenance-service
+                port:
+                  number: 8080
+
+          # Request Service
+          - path: /api/requests
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-request-service
+                port:
+                  number: 8080
+
+          # Frontend (catch-all — must be last)
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-frontend
+                port:
+                  number: 80
