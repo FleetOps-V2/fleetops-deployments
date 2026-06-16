@@ -14,7 +14,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/FleetOps-Project-Devops/fleetops-deployments.git
+    repoURL: https://github.com/FleetOps-V2/fleetops-deployments.git
     targetRevision: HEAD
     path: k8s/prod/apps
     directory:
