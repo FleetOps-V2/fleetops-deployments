@@ -1,6 +1,13 @@
 image:
   tag: v1.0.1
 replicas: 2
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
 autoscaling:
   enabled: true
   minReplicas: 2
