@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/component: backend
     {{- include "fleetops-common.labels" . | nindent 4 }}
 data:
-  SPRING_DATASOURCE_URL: "{{ .Values.config.datasourceUrl }}"
   SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
   SPRING_REDIS_PORT: "6379"
   SPRING_REDIS_DATABASE: "0"

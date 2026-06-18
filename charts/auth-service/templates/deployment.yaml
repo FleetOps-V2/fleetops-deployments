@@ -36,13 +36,13 @@ spec:
             - configMapRef:
                 name: fleetops-auth-service-config
           env:
-            # POSTGRES_HOST must be declared FIRST so $(POSTGRES_HOST)
-            # in the ConfigMap datasourceUrl resolves correctly at pod start
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secrets.postgres.name }}
                   key: {{ .Values.secrets.postgres.hostKey }}
+            - name: SPRING_DATASOURCE_URL
+              value: "{{ .Values.config.datasourceUrl }}"
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
