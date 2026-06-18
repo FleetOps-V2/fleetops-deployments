@@ -1,8 +1,8 @@
 image:
-  tag: v1.0.0
+  tag: v1.0.0 # CI/CD will update this with semver tag on first main push
 replicas: 2
 autoscaling:
   enabled: true
   minReplicas: 2
-  maxReplicas: 5
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 70
