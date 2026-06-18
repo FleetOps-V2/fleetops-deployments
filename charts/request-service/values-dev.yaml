@@ -2,9 +2,9 @@
 # Uses commit SHA tags for rapid iteration and exact traceability
 
 image:
-  registry: "docker.io"
-  repository: johann2003/fleetops-request-service
-  tag: develop-1aed23c # CI will update this with commit SHA when dev branch is used
+  registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
+  repository: fleetops-dev/request-service
+  tag: bootstrap  # CI/CD will update this with develop-<sha> on develop push
   pullPolicy: Always
 replicas: 1
 service:

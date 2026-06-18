@@ -1,6 +1,6 @@
 image:
-  registry: "docker.io"
-  repository: johann2003/fleetops-frontend
+  registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
+  repository: fleetops-dev/frontend
   tag: ""  # Use values-dev.yaml or values-prod.yaml for environment-specific tags
   pullPolicy: IfNotPresent
 
@@ -55,6 +55,9 @@ argocd:
   syncWave: "5"
   annotations:
     SyncOptions: "Prune=true"
+
+serviceAccount:
+  name: fleetops-app
 
 securityContext:
   runAsNonRoot: true

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: fleetops-ingress
+description: ALB Ingress for FleetOps — cert ARN and SG ID injected by Terraform
+type: application
+version: 1.0.0
+appVersion: "1.0"

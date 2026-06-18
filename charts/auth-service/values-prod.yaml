@@ -1,10 +1,5 @@
-# Auth Service — Production overrides
-# Apply with: helm upgrade --install auth-service ./charts/auth-service \
-#             -f charts/auth-service/values-prod.yaml \
-#             --set image.registry=ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
-
 image:
-  tag: "latest"  # Override with specific git SHA in CI/CD: --set image.tag=$GIT_SHA
+  tag: bootstrap  # CI/CD will update this with semver tag on first main push
 
 replicas: 2
 

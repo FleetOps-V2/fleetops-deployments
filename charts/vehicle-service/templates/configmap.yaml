@@ -19,3 +19,5 @@ data:
   SPRING_FLYWAY_ENABLED: "true"
   AWS_REGION: "{{ .Values.config.awsRegion }}"
   S3_BUCKET_NAME: "{{ .Values.config.s3BucketName }}"
+  BEDROCK_REGION: "{{ .Values.config.awsRegion }}"
+  BEDROCK_MODEL_ID: "{{ .Values.config.bedrockModelId }}"

@@ -1,8 +1,8 @@
 image:
-  registry: "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com"
+  registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
   repository: fleetops-dev/request-service
-  tag: "latest"
-  pullPolicy: Always
+  tag: ""  # Set via --set image.tag=<git-sha> at deploy time; never use latest
+  pullPolicy: IfNotPresent
 
 replicas: 1
 namespace:
@@ -51,9 +51,9 @@ resources:
     memory: 512Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
 config:
@@ -72,9 +72,6 @@ secrets:
   app:
     name: fleetops-app-secret
     jwtSecretKey: JWT_SECRET
-  redis:
-    name: fleetops-redis-secret
-    hostKey: REDIS_HOST
 
 securityContext:
   runAsNonRoot: true

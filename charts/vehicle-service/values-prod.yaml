@@ -1,5 +1,5 @@
 image:
-  tag: "latest"
+  tag: bootstrap  # CI/CD will update this with semver tag on first main push
 replicas: 2
 autoscaling:
   enabled: true

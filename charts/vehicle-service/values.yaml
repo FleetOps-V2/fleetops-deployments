@@ -1,10 +1,10 @@
 # FleetOps Vehicle Service — Helm Values
 
 image:
-  registry: "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com"
+  registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
   repository: fleetops-dev/vehicle-service
-  tag: "latest"
-  pullPolicy: Always
+  tag: ""  # Set via --set image.tag=<git-sha> at deploy time; never use latest
+  pullPolicy: IfNotPresent
 
 replicas: 1
 namespace:
@@ -53,9 +53,9 @@ resources:
     memory: 512Mi
 
 autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
 config:
@@ -65,6 +65,7 @@ config:
   datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/vehicle_db"
   awsRegion: "us-east-1"
   s3BucketName: "fleetops-dev-vehicle-docs"
+  bedrockModelId: "anthropic.claude-3-haiku-20240307-v1:0"
 
 secrets:
   postgres:
