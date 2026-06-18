@@ -10,7 +10,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    {{- include "fleetops-common.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/name: fleetops-frontend
+    app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - name: http
       port: {{ .Values.service.port }}
