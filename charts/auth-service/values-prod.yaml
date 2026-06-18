@@ -1,5 +1,5 @@
 image:
-  tag: v1.0.0
+  tag: v1.0.1
 replicas: 2
 autoscaling:
   enabled: true
