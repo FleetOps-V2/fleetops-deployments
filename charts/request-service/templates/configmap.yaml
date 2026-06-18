@@ -16,6 +16,7 @@ data:
   SPRING_PROFILES_ACTIVE: "{{ .Values.config.springProfilesActive }}"
   SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
   SPRING_FLYWAY_ENABLED: "true"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "3"
   AWS_REGION: "{{ .Values.config.awsRegion }}"
   APP_VEHICLE_SERVICE_URL: "{{ .Values.config.vehicleServiceUrl }}"
   APP_MAINTENANCE_SERVICE_URL: "{{ .Values.config.maintenanceServiceUrl }}"
