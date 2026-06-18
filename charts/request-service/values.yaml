@@ -62,6 +62,8 @@ config:
   springProfilesActive: "prod"
   datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/request_db"
   awsRegion: "us-east-1"
+  vehicleServiceUrl: "http://fleetops-vehicle-service:8080"
+  maintenanceServiceUrl: "http://fleetops-maintenance-service:8080"
 
 secrets:
   postgres:

@@ -55,7 +55,7 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.app.name }}
                   key: {{ .Values.secrets.app.jwtSecretKey }}
-            - name: SPRING_REDIS_HOST
+            - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secrets.redis.name }}

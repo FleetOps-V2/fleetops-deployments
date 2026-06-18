@@ -1,0 +1,1 @@
+{{- include "fleetops-common.hpa" . }}

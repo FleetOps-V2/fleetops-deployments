@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fleetops-common.name" . }}
+  name: fleetops-frontend
   namespace: {{ include "fleetops-common.namespace" . }}
   labels:
-    app.kubernetes.io/name: {{ include "fleetops-common.name" . }}
+    app.kubernetes.io/name: fleetops-frontend
     app.kubernetes.io/component: frontend
     {{- include "fleetops-common.labels" . | nindent 4 }}
   annotations:
@@ -13,11 +13,13 @@ spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      {{- include "fleetops-common.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: fleetops-frontend
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        {{- include "fleetops-common.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: fleetops-frontend
+        app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: frontend
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
@@ -36,23 +38,9 @@ spec:
             - name: nginx-config
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
+              readOnly: true
           {{- end }}
-          readinessProbe:
-            httpGet:
-              path: {{ .Values.probes.readiness.path }}
-              port: {{ .Values.probes.readiness.port }}
-            initialDelaySeconds: {{ .Values.probes.readiness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.readiness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.readiness.failureThreshold }}
-            timeoutSeconds: {{ .Values.probes.readiness.timeoutSeconds }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.probes.liveness.path }}
-              port: {{ .Values.probes.liveness.port }}
-            initialDelaySeconds: {{ .Values.probes.liveness.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.liveness.periodSeconds }}
-            failureThreshold: {{ .Values.probes.liveness.failureThreshold }}
-            timeoutSeconds: {{ .Values.probes.liveness.timeoutSeconds }}
+          {{- include "fleetops-common.nginxProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- if .Values.nginxConfig.enabled }}

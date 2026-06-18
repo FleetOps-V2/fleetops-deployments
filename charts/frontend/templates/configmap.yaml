@@ -21,13 +21,13 @@ data:
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # AUTH
-        location /auth/ {
-            proxy_pass http://fleetops-auth-service:8080/auth/;
+        # AUTH — React app calls /api/auth/...
+        location /api/auth/ {
+            proxy_pass http://fleetops-auth-service:8080/api/auth/;
         }
 
-        location = /auth {
-            proxy_pass http://fleetops-auth-service:8080/auth;
+        location = /api/auth {
+            proxy_pass http://fleetops-auth-service:8080/api/auth;
         }
 
         # VEHICLES (FleetOps)
@@ -55,6 +55,11 @@ data:
 
         location = /api/requests {
             proxy_pass http://fleetops-request-service:8080/api/requests;
+        }
+
+        # TRACKING (GPS telemetry — vehicle-service TrackingController)
+        location /api/tracking/ {
+            proxy_pass http://fleetops-vehicle-service:8080/api/tracking/;
         }
 
         # React SPA - serve index.html for all other routes
