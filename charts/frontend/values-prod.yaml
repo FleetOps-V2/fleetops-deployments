@@ -2,7 +2,7 @@
 # Uses Semantic Versioning tags for controlled releases
 
 image:
-  tag: v1.0.1 # CI/CD will update this with semver tag on first main push
+  tag: v1.0.2 # CI/CD will update this with semver tag on first main push
   pullPolicy: IfNotPresent
 replicas: 2
 service:
