@@ -65,7 +65,7 @@ config:
   datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/vehicle_db"
   awsRegion: "us-east-1"
   s3BucketName: "fleetops-dev-vehicle-docs"
-  bedrockModelId: "amazon.nova-micro-v1:0"
+  bedrockModelId: "mistral.mistral-7b-instruct-v0:2"
 
 secrets:
   postgres:
