@@ -4,6 +4,6 @@
 #
 # Allowed: infrastructure identifiers only (ARNs, IDs, Zone IDs).
 # Forbidden: passwords, JWT secrets, API keys — those belong in Secrets Manager + ESO.
-certArn: "arn:aws:acm:us-east-1:538661800892:certificate/8ed27dd0-3ba9-415a-aa59-8e445e0bfe35"
-albSgId: "sg-0fe2946157d094d38"
-hostedZoneId: "Z0240546125P8S26UUN2"
+certArn: "arn:aws:acm:us-east-1:538661800892:certificate/a0359107-b637-43e9-aa77-8d8bf8945577"
+albSgId: "sg-0ad20e4976bfa4c70"
+hostedZoneId: "Z076593529HQWJV3JCHFE"
