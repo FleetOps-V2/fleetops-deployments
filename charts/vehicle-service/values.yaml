@@ -79,6 +79,10 @@ secrets:
   redis:
     name: fleetops-redis-secret
     hostKey: REDIS_HOST
+  bedrock:
+    name: fleetops-bedrock-secret
+    accessKeyKey: BEDROCK_ACCESS_KEY
+    secretKeyKey: BEDROCK_SECRET_KEY
 securityContext:
   runAsNonRoot: true
   runAsUser: 1000
