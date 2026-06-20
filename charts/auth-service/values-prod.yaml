@@ -1,5 +1,5 @@
 image:
-  tag: v1.2.3
+  tag: v1.2.4
 replicas: 2
 resources:
   requests:
