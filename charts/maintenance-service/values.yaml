@@ -19,7 +19,7 @@ serviceAccount:
 probes:
   startup:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -27,7 +27,7 @@ probes:
     timeoutSeconds: 5
   readiness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -35,7 +35,7 @@ probes:
     timeoutSeconds: 5
   liveness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 60
     periodSeconds: 15
@@ -77,6 +77,10 @@ secrets:
   redis:
     name: fleetops-redis-secret
     hostKey: REDIS_HOST
+  sns:
+    name: fleetops-sns-secret
+    insuranceArnKey: INSURANCE_SNS_TOPIC_ARN
+    serviceArnKey: SERVICE_SNS_TOPIC_ARN
 
 securityContext:
   runAsNonRoot: true

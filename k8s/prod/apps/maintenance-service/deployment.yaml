@@ -57,14 +57,15 @@ spec:
                 secretKeyRef:
                   name: fleetops-app-secret
                   key: JWT_SECRET
-            - name: SPRING_REDIS_HOST
+            # REDIS_HOST matches spring.data.redis.host: ${REDIS_HOST:redis} in application.yml
+            - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:
                   name: fleetops-redis-secret
                   key: REDIS_HOST
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -72,7 +73,7 @@ spec:
             timeoutSeconds: 5
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 15

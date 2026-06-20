@@ -21,7 +21,14 @@ data:
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
 
-        # AUTH — React app calls /api/auth/...
+        # ALB health check stub — ALB probes /health on every target group including frontend
+        location = /health {
+            access_log off;
+            return 200 'OK';
+            add_header Content-Type text/plain;
+        }
+
+        # AUTH
         location /api/auth/ {
             proxy_pass http://fleetops-auth-service:8080/api/auth/;
         }
@@ -30,7 +37,12 @@ data:
             proxy_pass http://fleetops-auth-service:8080/api/auth;
         }
 
-        # VEHICLES (FleetOps)
+        # AUDIT (CloudTrail events → auth-service)
+        location /api/audit/ {
+            proxy_pass http://fleetops-auth-service:8080/api/audit/;
+        }
+
+        # VEHICLES
         location /api/vehicles/ {
             proxy_pass http://fleetops-vehicle-service:8080/api/vehicles/;
         }
@@ -39,7 +51,12 @@ data:
             proxy_pass http://fleetops-vehicle-service:8080/api/vehicles;
         }
 
-        # TASKS (FleetOps maintenance queue)
+        # TRACKING (GPS telemetry — vehicle-service TrackingController)
+        location /api/tracking/ {
+            proxy_pass http://fleetops-vehicle-service:8080/api/tracking/;
+        }
+
+        # TASKS (maintenance queue)
         location /api/tasks/ {
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks/;
         }
@@ -48,18 +65,19 @@ data:
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks;
         }
 
-        # REQUESTS (FleetOps)
+        # MEDIA (EFS shared inspection media vault)
+        location /api/media/ {
+            client_max_body_size 25M;
+            proxy_pass http://fleetops-maintenance-service:8080/api/media/;
+        }
+
+        # REQUESTS
         location /api/requests/ {
             proxy_pass http://fleetops-request-service:8080/api/requests/;
         }
 
         location = /api/requests {
             proxy_pass http://fleetops-request-service:8080/api/requests;
-        }
-
-        # TRACKING (GPS telemetry — vehicle-service TrackingController)
-        location /api/tracking/ {
-            proxy_pass http://fleetops-vehicle-service:8080/api/tracking/;
         }
 
         # React SPA - serve index.html for all other routes

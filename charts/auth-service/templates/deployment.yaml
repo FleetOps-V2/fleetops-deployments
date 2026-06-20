@@ -58,6 +58,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.app.name }}
                   key: {{ .Values.secrets.app.jwtSecretKey }}
+            - name: LAMBDA_SERVICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.lambdaService.name }}
+                  key: {{ .Values.secrets.lambdaService.passwordKey }}
           {{- include "fleetops-common.springBootProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

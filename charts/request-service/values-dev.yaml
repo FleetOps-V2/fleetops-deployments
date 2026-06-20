@@ -16,7 +16,7 @@ namespace:
 probes:
   startup:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 45
     periodSeconds: 10
@@ -24,7 +24,7 @@ probes:
     timeoutSeconds: 5
   readiness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 45
     periodSeconds: 10
@@ -32,7 +32,7 @@ probes:
     timeoutSeconds: 5
   liveness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 90
     periodSeconds: 15

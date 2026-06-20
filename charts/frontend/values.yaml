@@ -11,13 +11,13 @@ service:
   type: ClusterIP
 
 namespace:
-  name: fleetops-dev
+  name: fleetops-prod
   create: false
 
 probes:
   readiness:
     enabled: true
-    path: /
+    path: /health
     port: 80
     initialDelaySeconds: 10
     periodSeconds: 10
@@ -25,7 +25,7 @@ probes:
     timeoutSeconds: 5
   liveness:
     enabled: true
-    path: /
+    path: /health
     port: 80
     initialDelaySeconds: 15
     periodSeconds: 20
@@ -34,7 +34,7 @@ probes:
 
 resources:
   requests:
-    cpu: 50m
+    cpu: 100m
     memory: 128Mi
   limits:
     cpu: 250m

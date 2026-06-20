@@ -23,3 +23,4 @@ data:
   # Flyway — schema managed by migrations, never by Hibernate
   SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
   SPRING_FLYWAY_ENABLED: "true"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "3"

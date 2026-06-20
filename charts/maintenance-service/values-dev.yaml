@@ -16,7 +16,7 @@ namespace:
 probes:
   startup:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -24,7 +24,7 @@ probes:
     timeoutSeconds: 5
   readiness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -32,7 +32,7 @@ probes:
     timeoutSeconds: 5
   liveness:
     enabled: true
-    path: /actuator/health
+    path: /health
     port: 8080
     initialDelaySeconds: 60
     periodSeconds: 15
@@ -54,11 +54,19 @@ config:
 secrets:
   postgres:
     name: fleetops-postgres-secret
+    hostKey: POSTGRES_HOST
     userKey: POSTGRES_USER
     passwordKey: POSTGRES_PASSWORD
   app:
     name: fleetops-app-secret
     jwtSecretKey: JWT_SECRET
+  redis:
+    name: fleetops-redis-secret
+    hostKey: REDIS_HOST
+  sns:
+    name: fleetops-sns-secret
+    insuranceArnKey: INSURANCE_SNS_TOPIC_ARN
+    serviceArnKey: SERVICE_SNS_TOPIC_ARN
 argocd:
   enabled: true
   syncWave: "4"

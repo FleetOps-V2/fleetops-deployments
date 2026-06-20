@@ -62,6 +62,9 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.redis.name }}
                   key: {{ .Values.secrets.redis.hostKey }}
+            # BEDROCK_ACCESS_KEY / BEDROCK_SECRET_KEY intentionally omitted.
+            # Empty values trigger DefaultCredentialsProvider in BedrockConfig.java,
+            # which uses the pod's IRSA role — no static keys needed.
           {{- include "fleetops-common.springBootProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

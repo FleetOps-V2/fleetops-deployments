@@ -17,6 +17,7 @@ data:
   SPRING_PROFILES_ACTIVE: "prod"
   SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
   SPRING_FLYWAY_ENABLED: "true"
+  SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: "3"
   # S3 bucket for vehicle document uploads (via IRSA — no AWS keys needed)
   AWS_REGION: "us-east-1"
   S3_BUCKET_NAME: "fleetops-dev-vehicle-docs"

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fleetops-app
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-app
+    app.kubernetes.io/environment: prod
+  annotations:
+    # IRSA: replace with `terraform output github_actions_role_arn` equivalent for the app role
+    eks.amazonaws.com/role-arn: "arn:aws:iam::538661800892:role/fleetops-dev-app-irsa-role"
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: fleetops-app-role
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-app-role
+    app.kubernetes.io/environment: prod
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: fleetops-app-rolebinding
+  namespace: fleetops-prod
+  labels:
+    app.kubernetes.io/name: fleetops-app-rolebinding
+    app.kubernetes.io/environment: prod
+subjects:
+  - kind: ServiceAccount
+    name: fleetops-app
+    namespace: fleetops-prod
+roleRef:
+  kind: Role
+  name: fleetops-app-role
+  apiGroup: rbac.authorization.k8s.io

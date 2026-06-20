@@ -63,6 +63,16 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.redis.name }}
                   key: {{ .Values.secrets.redis.hostKey }}
+            - name: INSURANCE_SNS_TOPIC_ARN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.sns.name }}
+                  key: {{ .Values.secrets.sns.insuranceArnKey }}
+            - name: SERVICE_SNS_TOPIC_ARN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.sns.name }}
+                  key: {{ .Values.secrets.sns.serviceArnKey }}
           {{- include "fleetops-common.springBootProbes" . | nindent 10 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

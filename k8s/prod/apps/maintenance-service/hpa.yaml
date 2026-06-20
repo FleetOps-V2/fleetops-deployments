@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: maintenance-service
+  name: fleetops-maintenance-service
   namespace: fleetops-prod
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: maintenance-service
+    name: fleetops-maintenance-service
   minReplicas: 2
   maxReplicas: 5
   metrics:

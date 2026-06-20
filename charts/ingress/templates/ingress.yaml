@@ -8,13 +8,14 @@ metadata:
     app.kubernetes.io/component: networking
     app.kubernetes.io/managed-by: argocd
   annotations:
+    alb.ingress.kubernetes.io/group.name: "fleetops"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.certArn | quote }}
     alb.ingress.kubernetes.io/security-groups: {{ .Values.albSgId | quote }}
-    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
+    alb.ingress.kubernetes.io/healthcheck-path: /health
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
     alb.ingress.kubernetes.io/healthy-threshold-count: "2"
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "3"
@@ -31,6 +32,13 @@ spec:
                 name: fleetops-auth-service
                 port:
                   number: 8080
+          - path: /api/audit
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-auth-service
+                port:
+                  number: 8080
           - path: /api/vehicles
             pathType: Prefix
             backend:
@@ -39,6 +47,13 @@ spec:
                 port:
                   number: 8080
           - path: /api/tasks
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-maintenance-service
+                port:
+                  number: 8080
+          - path: /api/media
             pathType: Prefix
             backend:
               service:

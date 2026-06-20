@@ -71,9 +71,14 @@ spec:
                 secretKeyRef:
                   name: fleetops-app-secret
                   key: JWT_SECRET
+            - name: LAMBDA_SERVICE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: fleetops-lambda-service-secret
+                  key: LAMBDA_SERVICE_PASSWORD
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /health
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
@@ -81,7 +86,7 @@ spec:
             timeoutSeconds: 5
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /health
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 15
