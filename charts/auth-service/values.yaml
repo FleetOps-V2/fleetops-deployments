@@ -26,7 +26,7 @@ serviceAccount:
 probes:
   startup:
     enabled: true
-    path: /health
+    path: /actuator/health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -34,7 +34,7 @@ probes:
     timeoutSeconds: 5
   readiness:
     enabled: true
-    path: /health
+    path: /actuator/health
     port: 8080
     initialDelaySeconds: 30
     periodSeconds: 10
@@ -42,7 +42,7 @@ probes:
     timeoutSeconds: 5
   liveness:
     enabled: true
-    path: /health
+    path: /actuator/health
     port: 8080
     initialDelaySeconds: 60
     periodSeconds: 15
