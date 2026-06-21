@@ -1,15 +1,3 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: fleetops-app
-  namespace: fleetops-prod
-  labels:
-    app.kubernetes.io/name: fleetops-app
-    app.kubernetes.io/environment: prod
-  annotations:
-    # IRSA: replace with `terraform output github_actions_role_arn` equivalent for the app role
-    eks.amazonaws.com/role-arn: "arn:aws:iam::538661800892:role/fleetops-dev-app-irsa-role"
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
