@@ -6,3 +6,5 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 70
+config:
+  s3BucketName: "fleetops-prod-vehicle-docs"
