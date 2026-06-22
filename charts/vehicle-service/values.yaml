@@ -21,15 +21,15 @@ probes:
     enabled: true
     path: /actuator/health
     port: 8080
-    initialDelaySeconds: 30
+    initialDelaySeconds: 60
     periodSeconds: 10
-    failureThreshold: 10
+    failureThreshold: 12
     timeoutSeconds: 5
   readiness:
     enabled: true
     path: /actuator/health
     port: 8080
-    initialDelaySeconds: 30
+    initialDelaySeconds: 60
     periodSeconds: 10
     failureThreshold: 5
     timeoutSeconds: 5
@@ -37,7 +37,7 @@ probes:
     enabled: true
     path: /actuator/health
     port: 8080
-    initialDelaySeconds: 60
+    initialDelaySeconds: 90
     periodSeconds: 15
     failureThreshold: 3
     timeoutSeconds: 5
