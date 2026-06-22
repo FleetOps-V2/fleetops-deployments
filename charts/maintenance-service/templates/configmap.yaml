@@ -20,3 +20,4 @@ data:
   AWS_REGION: "{{ .Values.config.awsRegion }}"
   BEDROCK_REGION: "{{ .Values.config.awsRegion }}"
   BEDROCK_MODEL_ID: "{{ .Values.config.bedrockModelId }}"
+  EFS_MOUNT_PATH: "{{ .Values.efs.mountPath }}"

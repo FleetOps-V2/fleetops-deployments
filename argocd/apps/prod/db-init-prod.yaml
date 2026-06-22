@@ -8,9 +8,6 @@ metadata:
     app.kubernetes.io/environment: prod
     app.kubernetes.io/component: db-init
   annotations:
-    # Wave 2 — after ESO materialises fleetops-postgres-secret (wave 1),
-    # before any application pods start (wave 3+).
-    # ArgoCD waits for the Job to complete before proceeding to wave 3.
     argocd.argoproj.io/sync-wave: "2"
 spec:
   project: default

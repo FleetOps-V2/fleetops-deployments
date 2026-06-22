@@ -18,4 +18,4 @@ data:
   AWS_REGION: "us-east-1"
   VEHICLE_SERVICE_URL: "http://fleetops-vehicle-service:8080"
   MAINTENANCE_SERVICE_URL: "http://fleetops-maintenance-service:8080"
-  STEP_FUNCTIONS_STATE_MACHINE_ARN: ""
+  STEP_FUNCTIONS_STATE_MACHINE_ARN: "arn:aws:states:us-east-1:538661800892:stateMachine:fleetops-prod-request-workflow"

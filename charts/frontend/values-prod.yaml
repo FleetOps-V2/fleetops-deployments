@@ -1,6 +1,3 @@
-# FleetOps Frontend - Prod Environment Values
-# Uses Semantic Versioning tags for controlled releases
-
 image:
   tag: v1.1.0 # CI/CD will update this with semver tag on first main push
   pullPolicy: IfNotPresent

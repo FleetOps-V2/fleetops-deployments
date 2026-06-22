@@ -56,14 +56,20 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
+efs:
+  # Populated by terraform pipeline via environments/prod/infra-values.yaml.
+  # EFS volume and mountPath activate automatically once efsId is non-empty.
+  fileSystemId: ""      # e.g. fs-0abc1234def56789
+  accessPointId: ""     # e.g. fsap-0abc1234def56789
+  mountPath: /var/www/fleetops/shared-media
+
 config:
   jwtExpiration: "86400000"
   corsAllowedOrigins: "https://fleetops.website"
   springProfilesActive: "prod"
   datasourceUrl: "jdbc:postgresql://$(POSTGRES_HOST):5432/maintenance_db"
   awsRegion: "us-east-1"
-  # Bedrock — AI Maintenance Advisor (Phase 7)
-  bedrockModelId: "anthropic.claude-3-haiku-20240307-v1:0"
+  
 
 secrets:
   postgres:

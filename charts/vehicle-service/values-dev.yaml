@@ -1,6 +1,3 @@
-# FleetOps Vehicle Service - Dev Environment Values
-# Uses commit SHA tags for rapid iteration and exact traceability
-
 image:
   registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
   repository: fleetops-dev/vehicle-service

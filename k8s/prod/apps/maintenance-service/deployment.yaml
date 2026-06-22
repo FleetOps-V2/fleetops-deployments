@@ -57,7 +57,6 @@ spec:
                 secretKeyRef:
                   name: fleetops-app-secret
                   key: JWT_SECRET
-            # REDIS_HOST matches spring.data.redis.host: ${REDIS_HOST:redis} in application.yml
             - name: REDIS_HOST
               valueFrom:
                 secretKeyRef:

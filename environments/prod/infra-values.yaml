@@ -7,3 +7,7 @@
 certArn: "arn:aws:acm:us-east-1:538661800892:certificate/41f6b7c0-c1e3-4aaa-9547-2d29e30c17f9"
 albSgId: "sg-0fbf1cdaaa4d73955"
 hostedZoneId: "Z02429502SL3EX69VQ5G1"
+sfnArn: "arn:aws:states:us-east-1:538661800892:stateMachine:fleetops-prod-request-workflow"
+# efsId and efsAccessPointId populated by terraform apply — EFS mounts activate once these are set
+efsId: ""
+efsAccessPointId: ""

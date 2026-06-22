@@ -20,3 +20,4 @@ data:
   AWS_REGION: "{{ .Values.config.awsRegion }}"
   APP_VEHICLE_SERVICE_URL: "{{ .Values.config.vehicleServiceUrl }}"
   APP_MAINTENANCE_SERVICE_URL: "{{ .Values.config.maintenanceServiceUrl }}"
+  STEP_FUNCTIONS_STATE_MACHINE_ARN: "{{ .Values.sfnArn }}"

@@ -1,5 +1,3 @@
-# FleetOps Vehicle Service — Helm Values
-
 image:
   registry: "538661800892.dkr.ecr.us-east-1.amazonaws.com"
   repository: fleetops-dev/vehicle-service

@@ -20,7 +20,6 @@ spec:
         {{- include "fleetops-common.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: backend
     spec:
-      # IRSA — grants AWS API access without static credentials
       serviceAccountName: {{ .Values.serviceAccount.name }}
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}

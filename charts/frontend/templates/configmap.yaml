@@ -28,7 +28,6 @@ data:
             add_header Content-Type text/plain;
         }
 
-        # AUTH
         location /api/auth/ {
             proxy_pass http://fleetops-auth-service:8080/api/auth/;
         }
@@ -42,7 +41,6 @@ data:
             proxy_pass http://fleetops-auth-service:8080/api/audit/;
         }
 
-        # VEHICLES
         location /api/vehicles/ {
             proxy_pass http://fleetops-vehicle-service:8080/api/vehicles/;
         }
@@ -56,7 +54,6 @@ data:
             proxy_pass http://fleetops-vehicle-service:8080/api/tracking/;
         }
 
-        # TASKS (maintenance queue)
         location /api/tasks/ {
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks/;
         }
@@ -71,7 +68,6 @@ data:
             proxy_pass http://fleetops-maintenance-service:8080/api/media/;
         }
 
-        # REQUESTS
         location /api/requests/ {
             proxy_pass http://fleetops-request-service:8080/api/requests/;
         }

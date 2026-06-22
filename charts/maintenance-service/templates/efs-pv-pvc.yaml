@@ -1,0 +1,45 @@
+{{- if .Values.efs.fileSystemId }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: efs-sc
+  labels:
+    {{- include "fleetops-common.labels" . | nindent 4 }}
+provisioner: efs.csi.aws.com
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fleetops-efs-pv
+  labels:
+    {{- include "fleetops-common.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: "{{ .Values.efs.fileSystemId }}::{{ .Values.efs.accessPointId }}"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fleetops-efs-pvc
+  namespace: {{ include "fleetops-common.namespace" . }}
+  labels:
+    {{- include "fleetops-common.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  volumeName: fleetops-efs-pv
+  resources:
+    requests:
+      storage: 5Gi
+{{- end }}

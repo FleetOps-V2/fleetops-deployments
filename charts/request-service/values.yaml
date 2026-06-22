@@ -56,6 +56,8 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
+sfnArn: ""  # populated by terraform pipeline via environments/prod/infra-values.yaml
+
 config:
   jwtExpiration: "86400000"
   corsAllowedOrigins: "https://fleetops.website"

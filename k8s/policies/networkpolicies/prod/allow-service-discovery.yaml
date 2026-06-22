@@ -13,7 +13,6 @@ spec:
   - Ingress
   - Egress
   ingress:
-  # Allow same-namespace communication (inter-service)
   - from:
     - podSelector: {}  # Any pod in same namespace
     ports:
@@ -22,10 +21,10 @@ spec:
     - protocol: TCP
       port: 80    # Frontend
 
-  # Allow AWS ALB (traffic from VPC CIDR)
+  # Allow AWS ALB — target type ip means ALB sends from its VPC IPs (10.2.0.0/16)
   - from:
     - ipBlock:
-        cidr: 10.0.0.0/16
+        cidr: 10.2.0.0/16
     ports:
     - protocol: TCP
       port: 8080  # Backend services
@@ -42,7 +41,6 @@ spec:
       port: 8080  # Actuator metrics port
 
   egress:
-  # Allow DNS resolution
   - to:
     - namespaceSelector:
         matchLabels:
@@ -53,7 +51,6 @@ spec:
     - protocol: TCP
       port: 53
 
-  # Allow service discovery within same namespace
   - to:
       - podSelector: {}  # Allow to any pod in same namespace
     ports:
