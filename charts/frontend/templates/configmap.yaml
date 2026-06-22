@@ -54,6 +54,12 @@ data:
             proxy_pass http://fleetops-vehicle-service:8080/api/tracking/;
         }
 
+        # DOCUMENTS (S3 presigned URL — vehicle-service DocumentController)
+        location /api/documents/ {
+            client_max_body_size 0;
+            proxy_pass http://fleetops-vehicle-service:8080/api/documents/;
+        }
+
         location /api/tasks/ {
             proxy_pass http://fleetops-maintenance-service:8080/api/tasks/;
         }
