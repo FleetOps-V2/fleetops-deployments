@@ -21,3 +21,4 @@ data:
   S3_BUCKET_NAME: "{{ .Values.config.s3BucketName }}"
   BEDROCK_REGION: "{{ .Values.config.awsRegion }}"
   BEDROCK_MODEL_ID: "{{ .Values.config.bedrockModelId }}"
+  BEDROCK_ROLE_ARN: "{{ .Values.config.bedrockRoleArn }}"
