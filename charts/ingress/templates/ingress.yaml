@@ -81,3 +81,58 @@ spec:
                 name: fleetops-frontend
                 port:
                   number: 80
+    # origin.* host allows Lambda (non-VPC) to reach backend services directly via ALB,
+    # bypassing CloudFront. CloudFront sends Host: origin.<domain> to the ALB, so this
+    # rule is also required for CloudFront → ALB routing to work correctly.
+    - host: origin.{{ .Values.domainName }}
+      http:
+        paths:
+          - path: /api/auth
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-auth-service
+                port:
+                  number: 8080
+          - path: /api/audit
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-auth-service
+                port:
+                  number: 8080
+          - path: /api/vehicles
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-vehicle-service
+                port:
+                  number: 8080
+          - path: /api/tasks
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-maintenance-service
+                port:
+                  number: 8080
+          - path: /api/media
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-maintenance-service
+                port:
+                  number: 8080
+          - path: /api/requests
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-request-service
+                port:
+                  number: 8080
+          - path: /api/tracking
+            pathType: Prefix
+            backend:
+              service:
+                name: fleetops-vehicle-service
+                port:
+                  number: 8080
