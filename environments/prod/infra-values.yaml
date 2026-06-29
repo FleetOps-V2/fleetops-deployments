@@ -5,5 +5,6 @@ certArn: "arn:aws:acm:us-east-1:538661800892:certificate/47da979d-8f6f-486e-8fc4
 albSgId: "sg-08a7776cb7f37a874"
 hostedZoneId: "Z08128906BC0DTEAH1D3"
 sfnArn: "arn:aws:states:us-east-1:538661800892:stateMachine:fleetops-prod-request-workflow"
-efsId: "fs-035a5b12c53f72ac5"
-efsAccessPointId: "fsap-086069f6f74a75226"
+efs:
+  fileSystemId: "fs-035a5b12c53f72ac5"
+  accessPointId: "fsap-086069f6f74a75226"
