@@ -6,6 +6,22 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 4
   targetCPUUtilizationPercentage: 70
+resources:
+  requests:
+    cpu: 100m
+    memory: 384Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
+probes:
+  startup:
+    enabled: true
+    path: /actuator/health
+    port: 8080
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 18
+    timeoutSeconds: 5
 config:
   s3BucketName: "fleetops-prod-vehicle-docs"
   bedrockRoleArn: "arn:aws:iam::612524168263:role/fleetops-prod-bedrock-invoke-role"
