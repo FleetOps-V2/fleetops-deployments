@@ -1,5 +1,5 @@
 image:
-  tag: v1.3.1 # CI/CD will update this with semver tag on first main push
+  tag: v1.3.2 # CI/CD will update this with semver tag on first main push
 replicas: 2
 autoscaling:
   enabled: true
